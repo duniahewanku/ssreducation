@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dunia Hewan Anak</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+#welcome h1 {
+  font-size: 36px; /* Ukuran judul lebih besar */
+  color: #ffdd57;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+#welcome p {
+  font-size: 22px; /* Ukuran paragraf lebih besar */
+  color: #ffffff;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.option-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-top: 30px;
+  }
+
+  .option-button {
+    background-color: #ffcc70;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    cursor: pointer;
+    transform: scale(1);
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeSlideUp 0.6s ease forwards;
+  }
+
+  .option-button:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+  .option-button:nth-child(2) {
+    animation-delay: 0.4s;
+  }
+  .option-button:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+
+  .option-button:hover {
+    transform: scale(1.05);
+    background-color: #ffe299;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Hidden class: options awalnya tidak tampil */
+  .hidden {
+    display: none;
+  }
+
+  /* Show class: aktifkan flex agar pilihan tampil */
+  .show {
+    display: flex;
+  }
+
+body {
+  font-family: 'Fredoka One', cursive, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f6f9; /* Background cerah */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  touch-action: pan-y;
+  animation: gradientBG 10s ease infinite;
+}
+
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Efek jawaban benar/salah */
+.correct {
+  animation: correctFlash 0.5s ease;
+  background-color: #c8e6c9;
+}
+
+.incorrect {
+  animation: incorrectShake 0.5s ease;
+  background-color: #ffcdd2;
+}
+
+@keyframes correctFlash {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes incorrectShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('background.png') no-repeat center center;
+  background-size: cover;
+  z-index: -1;
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+
+.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 80vh;
+  justify-content: center;
+  text-align: center;
+}
+
+h1, h2, p {
+  color: #fff;
+  text-shadow: 1px 1px 2px rgb(0, 0, 0);
+}
+
+img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  border-radius: 20px;
+  border: 4px solid #3aafa9;
+  background: white;
+}
+
+.choices {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+button {
+  padding: 15px 30px;
+  margin: 10px;
+  border-radius: 12px;
+  border: none;
+ background-color: #42fd1d; /* Warna latar tombol cerah */
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+button:hover {
+  background-color: #f56666; /* Warna berubah saat hover */
+  transform: scale(1.05);
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 100vw;
+  height: 100%;
+  padding-top: 50px;
+  opacity: 0;
+  transform: translateX(0);
+  transition: all 0.5s ease-in-out;
+  pointer-events: none;
+  z-index: 0;
+  box-sizing: border-box;
+}
+
+.page.active {
+  left: 0;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+  transform: scale(1);
+}
+
+.page.exit-left {
+  left: -100%;
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.page.enter-right {
+  left: 0;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+#feedback, #resultText {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#resultText.green {
+  color: rgb(21, 255, 0);
+}
+
+#resultText.red {
+  color: pink;
+}
+
+#score, #questionCounter {
+  margin-top: 30px;
+  font-size: 24px;
+  color: #25a4d3;
+}
+
+.back-button {
+  margin-top: 30px;
+}
+
+@media (max-width: 600px) {
+  img {
+    width: 120px;
+    height: 120px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  h1, h2, p {
+    font-size: 18px;
+    color: #ff577f; /* Teks dengan warna cerah */
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  #score {
+    font-size: 20px;
+  }
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Animasi timer */
+#timerImage {
+  font-size: 25px;
+  font-weight: bold;
+  color: #ffadad;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  transition: all 0.5s ease;
+}
+
+#timerImage.low-time {
+  color: #ff6b6b; /* Menandakan waktu hampir habis */
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+#watermark {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  font-family: 'Fredoka One', cursive, sans-serif;
+  font-size: 14px;
+  color: #ffffff;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* bayangan agar tetap terbaca */
+  z-index: 9999;
+  pointer-events: none;
+}
+
+#watermark span {
+  color: #ffdd57;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+  </style>
+</head>
+<body onclick="startBacksound()">
+  <audio id="backsound" src="backsound.mp3" loop></audio>
+  <audio id="soundCorrect" src="benar.mp3"></audio>
+  <audio id="soundWrong" src="salah.mp3"></audio>
+  <audio id="animal-audio" src=""></audio>
+
+  <div id="welcome" class="page active">
+    <div class="center-content">
+      <h1>👋 Selamat Datang di Dunia Hewan Anak!</h1>
+      <p>Temukan keasyikan bermain sambil belajar tentang hewan!</p>
+      <button onclick="goToGame('home')">Mulai</button>
+    </div>
+  </div>
+
+  <div id="home" class="page">
+    <div class="center-content">
+      <h1>🌟 Dunia Hewan Anak 🌟</h1>
+      <p>Pilih permainan yang ingin kamu mainkan:</p>
+      <div class="choices">
+        <button onclick="goToGame('gameImage')">🎨 Tebak Gambar Hewan</button>
+        <button onclick="goToGame('gameSound')">🔊 Tebak Suara Hewan</button>
+      </div>
+      <div class="back-button">
+        <button onclick="goToGame('welcome')">⬅️ Kembali ke Halaman Utama</button>
+      </div>
+    </div>
+  </div>
+  
+
+  <div id="gameImage" class="page">
+    <div class="center-content">
+      <h1>🐾 Tebak Gambar Hewan 🐾</h1>
+      <div id="questionCounter"></div>
+      <div id="timerImage" style="color: yellow; font-size: 20px; margin-top: 10px;"></div>
+      <img id="image" src="" alt="Gambar hewan" title="Gambar hewan">
+      <div class="choices" id="choices"></div>
+      <div id="feedback"></div>
+    </div>
+  </div>
+  
+
+  <div id="gameSound" class="page">
+    <div class="center-content">
+      <h1>🦁 Tebak Suara Hewan</h1>
+      <button onclick="playAnimal()">🔊 Mainkan Suara</button>
+      <div id="soundChoices" class="choices hidden">
+        <button onclick="checkAnimal('kucing')">Kucing</button>
+        <button onclick="checkAnimal('anjing')">Anjing</button>
+        <button onclick="checkAnimal('sapi')">Sapi</button>
+        <button onclick="checkAnimal('Ayam')">Ayam</button>
+        <button onclick="checkAnimal('gajah')">Gajah</button>
+        <button onclick="checkAnimal('harimau')">Harimau</button>
+        <button onclick="checkAnimal('kuda')">Kuda</button>
+        <button onclick="checkAnimal('domba')">domba</button>
+        <button onclick="checkAnimal('burung')">Burung</button>
+        <button onclick="checkAnimal('monyet')">monyet</button>
+      </div>
+      <p id="resultText"></p>
+      <div class="back-button">
+        <button onclick="goToGame('home')">⬅️ Kembali ke Menu</button>
+      </div>
+    </div>
+  </div>
+  <div id="result" class="page">
+    <div class="center-content">
+      <h2>🎉 Skor Akhir: <span id="finalScore"></span></h2>
+      <button onclick="goToGame('gameImage')">Main Lagi</button>
+      <button onclick="goToGame('home')">Kembali ke Menu</button>
+    </div>
+  </div>
+
+  <div id="watermark">
+    Create By: <span>riizk</span>, <span>SAAR</span>, dan <span>Szaahra</span>
+  </div>  
+
+  <script>
+    let backsoundStarted = false;
+    function startBacksound() {
+      if (!backsoundStarted) {
+        const backsound = document.getElementById("backsound");
+        backsound.volume = 0.3;
+        backsound.play().catch(() => {});
+        backsoundStarted = true;
+      }
+    }
+
+    function showPage(id) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    function goToGame(pageId) {
+      showPage(pageId);
+      if (pageId === "gameImage") startGame();
+    }
+
+    const questions = [
+      { img: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg", answer: "Anjing", choices: ["Kucing", "Anjing", "Sapi"] },
+      { img: "kucing.jpg", answer: "Kucing", choices: ["Ayam", "Kucing", "Kelinci"] },
+      { img: "sapi-limosin.jpeg", answer: "Sapi", choices: ["Sapi", "Gajah", "Bebek"] },
+      { img: "kelinci.jpg", answer: "Kelinci", choices: ["Kelinci", "Ayam", "Kucing"] },
+      { img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/640px-African_Bush_Elephant.jpg", answer: "Gajah", choices: ["Gajah", "Sapi", "Kuda"] },
+      { img: "harimau.jpg", answer: "Harimau", choices: ["Harimau", "Kucing", "Anjing"] },
+      { img: "kuda.jpg", answer: "Kuda", choices: ["Kuda", "Gajah", "Sapi"] },
+      { img: "scp.webp", answer: "Ikan", choices: ["Ikan", "Burung", "Sapi"] },
+      { img: "burung.jpg", answer: "Burung", choices: ["Burung", "Kelinci", "Macan"] },
+      { img: "singa.jpg", answer: "Singa", choices: ["Singa", "Gajah", "Kuda"] }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    let level = 1;
+
+function startGame() {
+  level = 1; // Mulai dari level 1
+  current = 0;
+  score = 0;
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = questions[current];
+  document.getElementById("image").src = q.img;
+  document.getElementById("questionCounter").textContent = `Soal ${current + 1} dari ${questions.length} - Level ${level}`;
+
+  // Hapus feedback sebelumnya
+  const feedback = document.getElementById("feedback");
+  feedback.textContent = "";
+
+  const choicesDiv = document.getElementById("choices");
+  choicesDiv.innerHTML = "";
+  q.choices.forEach(choice => {
+    const btn = document.createElement("button");
+    btn.textContent = choice;
+    btn.onclick = () => {
+      clearInterval(timerInterval);
+      checkAnswer(choice);
+    };
+    choicesDiv.appendChild(btn);
+  });
+
+  startTimer("timerImage", () => {
+    current++;
+    if (current < questions.length) {
+      loadQuestion();
+    } else {
+      level++;
+      if (level > 3) {
+        endGame();
+      } else {
+        setTimeout(loadQuestion, 1500);
+      }
+    }
+  }, 5);
+}
+
+function checkAnswer(choice) {
+  const q = questions[current];
+  const feedback = document.getElementById("feedback");
+  const correctSound = document.getElementById("soundCorrect");
+  const wrongSound = document.getElementById("soundWrong");
+
+  if (choice === q.answer) {
+    feedback.textContent = "Benar! 🎉";
+    feedback.style.color = "green";
+    score++;
+    correctSound.play();
+    // Tambahkan efek suara tawa atau tepuk tangan
+    const happySound = new Audio('suara_yeee_anak_kecil.mp3');
+    happySound.play();
+  } else {
+    feedback.textContent = "Salah 😢";
+    feedback.style.color = "red";
+    wrongSound.play();
+    // Tambahkan suara lucu atau efek yang menyenangkan
+    const sadSound = new Audio('fail.mp3');
+    sadSound.play();
+  }
+
+  current++;
+  if (current < questions.length) {
+    setTimeout(loadQuestion, 1500);
+  } else {
+    setTimeout(() => {
+      document.getElementById("finalScore").textContent = `${score} dari ${questions.length}`;
+      showPage("result");
+    }, 1500);
+  }
+}
+
+    let currentAnimal = '';
+    function playAnimal() {
+  const animals = ['kucing', 'anjing', 'sapi', 'ayam', 'gajah', 'harimau', 'kuda', 'domba', 'burung', 'monyet'];
+  currentAnimal = animals[Math.floor(Math.random() * animals.length)];
+
+  const sounds = {
+    kucing: 'suara-kucing.mp3',
+    anjing: 'suara-anjing.mp3',
+    sapi: 'suara-sapi.mp3',
+    ayam: 'suara-ayam.mp3',
+    gajah: 'suara-gajah.mp3',
+    harimau: 'suara-harimau.mp3',
+    kuda: 'suara-kuda.mp3',
+    domba: 'suara-domba.mp3',
+    burung: 'suara-burung.mp3',
+    monyet: 'suara-monyet.mp3'
+  };
+
+  const audio = document.getElementById('animal-audio');
+  const result = document.getElementById('resultText');
+  const soundChoices = document.getElementById('soundChoices');
+
+  // Reset tampilan
+  result.textContent = '';
+  result.className = '';
+  soundChoices.classList.remove('show');
+  soundChoices.classList.add('hidden');
+
+  audio.src = sounds[currentAnimal] || '';
+  if (audio.src) {
+    audio.play().catch(() => {});
+    audio.onended = () => {
+      soundChoices.classList.remove('hidden');
+      soundChoices.classList.add('show');
+    };
+  }
+}
+
+function checkAnimal(ans) {
+  const result = document.getElementById('resultText');
+  const correctSound = document.getElementById("soundCorrect");
+  const wrongSound = document.getElementById("soundWrong");
+
+  if (ans.toLowerCase() === currentAnimal.toLowerCase()) {
+    result.textContent = "Benar! 🎉";
+    result.className = "green";
+    correctSound.play();
+
+    const happySound = new Audio('suara_yeee_anak_kecil.mp3');
+    happySound.play();
+  } else {
+    result.textContent = "Salah 😢";
+    result.className = "red";
+    wrongSound.play();
+
+    const sadSound = new Audio('fail.mp3');
+    sadSound.play();
+  }
+
+  const audio = document.getElementById("animal-audio");
+  audio.src = sounds[currentAnimal];
+  audio.play();
+
+  // Tampilkan pilihan jika masih tersembunyi
+  const choices = document.getElementById("soundChoices");
+  choices.classList.remove("hidden");
+  choices.classList.add("show");
+
+  // Reset hasil sebelumnya
+  document.getElementById("resultText").textContent = '';
+}
+
+
+    let timerInterval;
+
+function startTimer(timerId, onTimeUp, duration) {
+  clearInterval(timerInterval); // hentikan timer sebelumnya
+  let timeLeft = duration;
+  
+  // Display the timer on the screen
+  const timerElement = document.getElementById(timerId);
+  timerElement.textContent = `Waktu: ${timeLeft}s`;
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerElement.textContent = `Waktu: ${timeLeft}s`; // Update the countdown display
+    
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      onTimeUp(); // waktu habis, langsung pindah soal
+    }
+  }, 1000);
+}
+
+  </script>
+</body>
+</html>
