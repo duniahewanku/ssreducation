@@ -418,7 +418,7 @@ html, body {
     function startBacksound() {
       if (!backsoundStarted) {
         const backsound = document.getElementById("backsound");
-        backsound.volume = 0.3;
+        backsound.volume = 0.1;
         backsound.play().catch(() => {});
         backsoundStarted = true;
       }
